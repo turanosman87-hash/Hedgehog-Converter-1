@@ -1,0 +1,29 @@
+name: Build Hedgehog EXE
+
+on: [push] # Kodu her güncellediğinde çalışır
+
+jobs:
+  build:
+    runs-on: windows-latest # Gerçek bir Windows makinesi açar
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install pyinstaller requests pdf2docx Pillow
+
+    - name: Build EXE
+      run: |
+        pyinstaller --noconsole --onefile --icon=hedgehog.png hedgehog_app.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Hedgehog-Windows-EXE
+        path: dist/hedgehog_app.exe
